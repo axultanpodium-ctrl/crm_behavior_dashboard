@@ -1,0 +1,3011 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM — Поведение клиентов 2024–2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --teal:#1D9E75;--teal-l:#E1F5EE;--teal-d:#0F6E56;
+  --blue:#378ADD;--blue-l:#E6F1FB;--blue-d:#185FA5;
+  --purple:#534AB7;--purple-l:#EEEDFE;
+  --amber:#BA7517;--amber-l:#FAEEDA;
+  --coral:#D85A30;--coral-l:#FAECE7;
+  --gray:#888780;--gray-l:#F1EFE8;--gray-d:#2C2C2A;
+  --red:#A32D2D;--red-l:#FCEBEB;
+  --green:#3B6D11;--green-l:#EAF3DE;
+  --border:#D3D1C7;--text:#2C2C2A;--text-s:#5F5E5A;--text-h:#888780;
+  --bg:#F7F6F2;--card:#FFFFFF;--radius:10px;--radius-s:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+.topbar{background:var(--gray-d);color:#fff;padding:18px 32px;display:flex;align-items:center;justify-content:space-between}
+.topbar h1{font-size:18px;font-weight:500}
+.topbar .sub{font-size:12px;color:#B4B2A9;margin-top:2px}
+.badge{font-size:11px;background:rgba(255,255,255,.12);border-radius:20px;padding:4px 12px;color:#D3D1C7}
+.nav{background:var(--gray-d);border-top:1px solid rgba(255,255,255,.08);display:flex;padding:0 32px;gap:4px}
+.nav-btn{background:none;border:none;color:#B4B2A9;padding:10px 16px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;transition:.2s}
+.nav-btn:hover{color:#fff}
+.nav-btn.active{color:#fff;border-bottom-color:var(--teal)}
+.container{max-width:1200px;margin:0 auto;padding:24px 24px 60px}
+.tab{display:none}.tab.active{display:block}
+.section{margin-bottom:28px}
+.section-title{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-h);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--card);border:.5px solid var(--border);border-radius:var(--radius);padding:16px 18px}
+.kpi-label{font-size:11px;color:var(--text-h);margin-bottom:6px}
+.kpi-value{font-size:28px;font-weight:500}
+.kpi-sub{font-size:11px;color:var(--text-h);margin-top:3px}
+.kpi.teal{border-left:3px solid var(--teal)}
+.kpi.purple{border-left:3px solid var(--purple)}
+.kpi.red{border-left:3px solid var(--red)}
+.kpi.amber{border-left:3px solid var(--amber)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.card{background:var(--card);border:.5px solid var(--border);border-radius:var(--radius);padding:20px 22px}
+.card-title{font-size:13px;font-weight:500;margin-bottom:14px}
+.note{font-size:11px;color:var(--text-h);margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:11px;font-weight:500;color:var(--text-h);padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:9px 10px;border-bottom:.5px solid var(--border);color:var(--text);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAF8}
+.tag{display:inline-block;font-size:11px;font-weight:500;padding:2px 9px;border-radius:20px;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums}
+.search-box{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-s);font-size:13px;margin-bottom:12px;outline:none}
+.search-box:focus{border-color:var(--teal)}
+.seg-bar{height:8px;border-radius:4px;margin-top:4px}
+.chart-wrap{position:relative;width:100%}
+.filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.pill{border:1px solid var(--border);background:var(--bg);border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;transition:.15s}
+.pill.active{background:var(--teal);border-color:var(--teal);color:#fff}
+.footer{text-align:center;font-size:11px;color:var(--text-h);padding:24px;border-top:.5px solid var(--border);margin-top:40px}
+.seg-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.seg-card{border-radius:var(--radius-s);padding:14px 16px}
+.sc-label{font-size:11px;font-weight:500;margin-bottom:4px}
+.sc-value{font-size:22px;font-weight:500}
+.sc-sub{font-size:11px;margin-top:2px;opacity:.75}
+@media(max-width:800px){.kpi-grid,.two-col,.three-col,.seg-hero{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.kpi-grid{grid-template-columns:1fr 1fr}.two-col,.three-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>CRM — Поведение клиентов</h1>
+    <div class="sub">Октябрь 2024 – Июль 2026 · 9 магазинов · Исключены: АЮ, ГВ, подшивка, сертификаты, Outlet</div>
+  </div>
+  <div class="badge">Данные на 02.07.2026</div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showTab('rfm')">RFM-сегменты</button>
+  <button class="nav-btn" onclick="showTab('trend')">Тренд</button>
+  <button class="nav-btn" onclick="showTab('decline')">Снижение активности</button>
+  <button class="nav-btn" onclick="showTab('bday')">День рождения</button>
+  <button class="nav-btn" onclick="showTab('cross')">Кросс-магазины</button>
+
+  <button class="nav-btn" onclick="showTab('ltv')">Скидки vs Обычные</button>
+</div>
+
+<div class="container">
+
+<!-- ===== TAB: RFM ===== -->
+<div id="tab-rfm" class="tab active">
+  <div class="section">
+    <div class="kpi-grid" id="rfmKpi"></div>
+  </div>
+  <div class="section two-col">
+    <div class="card">
+      <div class="card-title">Распределение клиентов по сегментам</div>
+      <div class="chart-wrap" style="height:300px"><canvas id="rfmChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Выручка по сегментам</div>
+      <div class="chart-wrap" style="height:300px"><canvas id="rfmRevChart"></canvas></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="card">
+      <div class="card-title">Детали по сегментам</div>
+      <table>
+        <thead><tr><th>Сегмент</th><th>Клиентов</th><th>Ср. дней с покупки</th><th>Ср. чеков</th><th>Ср. выручка (тг)</th><th>Всего выручка (тг)</th><th>% от выручки</th></tr></thead>
+        <tbody id="rfmTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: TREND ===== -->
+<div id="tab-trend" class="tab">
+  <div class="section">
+    <div class="kpi-grid" id="trendKpi"></div>
+  </div>
+  <div class="section">
+    <div class="card">
+      <div class="card-title">Средний чек по месяцам (тг)</div>
+      <p class="note"><span style="color:var(--amber)">■</span> Жёлтый фон — скидочный период</p>
+      <div class="chart-wrap" style="height:280px"><canvas id="trendAvgChart"></canvas></div>
+    </div>
+  </div>
+  <div class="section two-col">
+    <div class="card">
+      <div class="card-title">Выручка по месяцам (тг)</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="trendRevChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Активных клиентов по месяцам</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="trendClientsChart"></canvas></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="card">
+      <div class="card-title">Таблица по месяцам</div>
+      <table>
+        <thead><tr><th>Месяц</th><th>Чеков</th><th>Клиентов</th><th>Выручка (тг)</th><th>Ср. чек (тг)</th><th>Ср. выручка / клиент (тг)</th></tr></thead>
+        <tbody id="trendTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: DECLINING ===== -->
+<div id="tab-decline" class="tab">
+  <div class="section">
+    <div class="kpi-grid">
+      <div class="kpi red"><div class="kpi-label">Клиентов с угасанием</div><div class="kpi-value" id="decCount">—</div><div class="kpi-sub">2+ чека до 2026, 0–1 с 2026</div></div>
+      <div class="kpi amber"><div class="kpi-label">Полностью пропали</div><div class="kpi-value" id="decZero">—</div><div class="kpi-sub">0 чеков с января 2026</div></div>
+      <div class="kpi teal"><div class="kpi-label">Ещё 1 чек в 2026</div><div class="kpi-value" id="decOne">—</div><div class="kpi-sub">Активность снизилась</div></div>
+      <div class="kpi"><div class="kpi-label">% от всей базы</div><div class="kpi-value" id="decPct">—</div><div class="kpi-sub">клиентов теряем</div></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="card">
+      <div class="card-title">Клиенты со снижающейся активностью</div>
+      <p class="note">Красный фон = 0 чеков с января 2026. Показаны первые 200 по выручке.</p>
+      <input class="search-box" id="decSearch" placeholder="Поиск по имени..." oninput="filterTable('decBody','decSearch')">
+      <table>
+        <thead><tr><th>Клиент</th><th>Карта</th><th>Схема</th><th>Магазины</th><th>Чеков до 2026</th><th>Чеков с 2026</th><th>Выручка (тг)</th><th>Последняя покупка</th></tr></thead>
+        <tbody id="decBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: BIRTHDAY ===== -->
+<div id="tab-bday" class="tab">
+  <div class="section">
+    <div class="kpi-grid">
+      <div class="kpi teal"><div class="kpi-label">Клиентов с ДР в базе</div><div class="kpi-value" id="bdayTotal">—</div><div class="kpi-sub">из 3 809 всего</div></div>
+      <div class="kpi amber"><div class="kpi-label">Купили у дня рождения</div><div class="kpi-value" id="bdayBought">—</div><div class="kpi-sub">в ±14 дней</div></div>
+      <div class="kpi purple"><div class="kpi-label">% конверсии</div><div class="kpi-value" id="bdayPct">—</div><div class="kpi-sub">купили в окно ДР</div></div>
+      <div class="kpi"><div class="kpi-label">Не купили у ДР</div><div class="kpi-value" id="bdayMissed">—</div><div class="kpi-sub">потенциал для акций</div></div>
+    </div>
+  </div>
+  <div class="section two-col">
+    <div class="card">
+      <div class="card-title">Конверсия по месяцу рождения</div>
+      <div class="chart-wrap" style="height:260px"><canvas id="bdayChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Доля купивших в ±14 дней от ДР</div>
+      <table>
+        <thead><tr><th>Месяц рождения</th><th>Клиентов с ДР</th><th>Купили у ДР</th><th>%</th></tr></thead>
+        <tbody id="bdayTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: CROSS ===== -->
+<div id="tab-cross" class="tab">
+  <div class="section two-col">
+    <div class="card">
+      <div class="card-title">Топ маршрутов: первый магазин → следующий</div>
+      <div class="chart-wrap" style="height:300px"><canvas id="crossChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">% кросс-клиентов по первому магазину</div>
+      <p class="note">Зелёный ≥ 30% | Жёлтый ≥ 15%</p>
+      <table>
+        <thead><tr><th>Первый магазин</th><th>Всего</th><th>Кросс</th><th>%</th></tr></thead>
+        <tbody id="crossTable"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="section">
+    <div class="card">
+      <div class="card-title">Все маршруты (топ-20 по кол-ву клиентов)</div>
+      <table>
+        <thead><tr><th>Из магазина</th><th>В магазин</th><th>Клиентов</th></tr></thead>
+        <tbody id="journeyTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: LTV ===== -->
+<div id="tab-ltv" class="tab">
+  <div class="section">
+    <div class="kpi-grid" id="ltvKpi"></div>
+  </div>
+  <div class="section two-col">
+    <div class="card">
+      <div class="card-title">Средняя выручка на клиента (тг)</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="ltvAvgChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Среднее кол-во чеков</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="ltvFreqChart"></canvas></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="card">
+      <div class="card-title">Вывод</div>
+      <div style="padding:16px;background:var(--teal-l);border-radius:var(--radius-s);font-size:13px;line-height:1.8;color:var(--teal-d)" id="ltvConclusion"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+<div class="footer">CRM-аналитика · Поведение клиентов 2024–2026 · 9 магазинов · 7 отчётов</div>
+
+<script>
+const D = {
+  "rfm_seg": [
+    {
+      "seg": "Чемпионы",
+      "count": 747,
+      "avg_recency": 41,
+      "avg_freq": 11.2,
+      "avg_monetary": 12312160,
+      "total_revenue": 9197183200
+    },
+    {
+      "seg": "Лояльные",
+      "count": 814,
+      "avg_recency": 115,
+      "avg_freq": 3.0,
+      "avg_monetary": 2125983,
+      "total_revenue": 1730550200
+    },
+    {
+      "seg": "Потенциально лояльные",
+      "count": 43,
+      "avg_recency": 161,
+      "avg_freq": 1.0,
+      "avg_monetary": 2761598,
+      "total_revenue": 118748700
+    },
+    {
+      "seg": "Новые",
+      "count": 420,
+      "avg_recency": 54,
+      "avg_freq": 1.0,
+      "avg_monetary": 670994,
+      "total_revenue": 281817400
+    },
+    {
+      "seg": "Под угрозой",
+      "count": 407,
+      "avg_recency": 303,
+      "avg_freq": 2.8,
+      "avg_monetary": 2213697,
+      "total_revenue": 900974800
+    },
+    {
+      "seg": "Не могу потерять",
+      "count": 160,
+      "avg_recency": 503,
+      "avg_freq": 2.8,
+      "avg_monetary": 2154438,
+      "total_revenue": 344710000
+    },
+    {
+      "seg": "Спящие",
+      "count": 438,
+      "avg_recency": 458,
+      "avg_freq": 1.1,
+      "avg_monetary": 1116379,
+      "total_revenue": 488974100
+    },
+    {
+      "seg": "Потерянные",
+      "count": 518,
+      "avg_recency": 430,
+      "avg_freq": 1.0,
+      "avg_monetary": 267405,
+      "total_revenue": 138515800
+    },
+    {
+      "seg": "Прочие",
+      "count": 262,
+      "avg_recency": 167,
+      "avg_freq": 1.0,
+      "avg_monetary": 476908,
+      "total_revenue": 124949800
+    }
+  ],
+  "monthly": [
+    {
+      "month": "2024-11",
+      "label": "Nov 2024",
+      "n_checks": 700,
+      "revenue": 673879000,
+      "clients": 477,
+      "avg_check": 962684,
+      "is_sale": true
+    },
+    {
+      "month": "2024-12",
+      "label": "Dec 2024",
+      "n_checks": 608,
+      "revenue": 484399900,
+      "clients": 398,
+      "avg_check": 796710,
+      "is_sale": true
+    },
+    {
+      "month": "2025-01",
+      "label": "Jan 2025",
+      "n_checks": 446,
+      "revenue": 309428500,
+      "clients": 348,
+      "avg_check": 693785,
+      "is_sale": true
+    },
+    {
+      "month": "2025-02",
+      "label": "Feb 2025",
+      "n_checks": 550,
+      "revenue": 438023600,
+      "clients": 378,
+      "avg_check": 796406,
+      "is_sale": true
+    },
+    {
+      "month": "2025-03",
+      "label": "Mar 2025",
+      "n_checks": 582,
+      "revenue": 492260100,
+      "clients": 350,
+      "avg_check": 845807,
+      "is_sale": false
+    },
+    {
+      "month": "2025-04",
+      "label": "Apr 2025",
+      "n_checks": 718,
+      "revenue": 590705900,
+      "clients": 426,
+      "avg_check": 822710,
+      "is_sale": false
+    },
+    {
+      "month": "2025-05",
+      "label": "May 2025",
+      "n_checks": 751,
+      "revenue": 605654400,
+      "clients": 425,
+      "avg_check": 806463,
+      "is_sale": false
+    },
+    {
+      "month": "2025-06",
+      "label": "Jun 2025",
+      "n_checks": 581,
+      "revenue": 479598000,
+      "clients": 365,
+      "avg_check": 825469,
+      "is_sale": true
+    },
+    {
+      "month": "2025-07",
+      "label": "Jul 2025",
+      "n_checks": 531,
+      "revenue": 439890700,
+      "clients": 361,
+      "avg_check": 828419,
+      "is_sale": true
+    },
+    {
+      "month": "2025-08",
+      "label": "Aug 2025",
+      "n_checks": 568,
+      "revenue": 517812800,
+      "clients": 400,
+      "avg_check": 911642,
+      "is_sale": true
+    },
+    {
+      "month": "2025-09",
+      "label": "Sep 2025",
+      "n_checks": 663,
+      "revenue": 746044100,
+      "clients": 449,
+      "avg_check": 1125255,
+      "is_sale": false
+    },
+    {
+      "month": "2025-10",
+      "label": "Oct 2025",
+      "n_checks": 801,
+      "revenue": 917575000,
+      "clients": 546,
+      "avg_check": 1145536,
+      "is_sale": false
+    },
+    {
+      "month": "2025-11",
+      "label": "Nov 2025",
+      "n_checks": 790,
+      "revenue": 875709500,
+      "clients": 505,
+      "avg_check": 1108493,
+      "is_sale": true
+    },
+    {
+      "month": "2025-12",
+      "label": "Dec 2025",
+      "n_checks": 813,
+      "revenue": 884619900,
+      "clients": 529,
+      "avg_check": 1088093,
+      "is_sale": true
+    },
+    {
+      "month": "2026-01",
+      "label": "Jan 2026",
+      "n_checks": 500,
+      "revenue": 481617600,
+      "clients": 386,
+      "avg_check": 963235,
+      "is_sale": true
+    },
+    {
+      "month": "2026-02",
+      "label": "Feb 2026",
+      "n_checks": 566,
+      "revenue": 581190400,
+      "clients": 423,
+      "avg_check": 1026838,
+      "is_sale": true
+    },
+    {
+      "month": "2026-03",
+      "label": "Mar 2026",
+      "n_checks": 810,
+      "revenue": 806863900,
+      "clients": 544,
+      "avg_check": 996128,
+      "is_sale": false
+    },
+    {
+      "month": "2026-04",
+      "label": "Apr 2026",
+      "n_checks": 867,
+      "revenue": 875262700,
+      "clients": 537,
+      "avg_check": 1009530,
+      "is_sale": false
+    },
+    {
+      "month": "2026-05",
+      "label": "May 2026",
+      "n_checks": 998,
+      "revenue": 952799900,
+      "clients": 613,
+      "avg_check": 954709,
+      "is_sale": false
+    },
+    {
+      "month": "2026-06",
+      "label": "Jun 2026",
+      "n_checks": 913,
+      "revenue": 818992000,
+      "clients": 607,
+      "avg_check": 897033,
+      "is_sale": true
+    },
+    {
+      "month": "2026-07",
+      "label": "Jul 2026",
+      "n_checks": 32,
+      "revenue": 20080500,
+      "clients": 27,
+      "avg_check": 627515,
+      "is_sale": true
+    }
+  ],
+  "declining_count": 901,
+  "declining": [
+    {
+      "client": "Жумабеков Алмас",
+      "card_no": "87474534538",
+      "scheme": "Platinum (30%)",
+      "stores": "Esentai Mall, Santoni, Нурсая, Подиум Статус",
+      "old": 34,
+      "recent": 1,
+      "total_amount": 53225500,
+      "last_date": "30.04.2026"
+    },
+    {
+      "client": "Крамоленко Елена",
+      "card_no": "87774877777",
+      "scheme": "Platinum (30%)",
+      "stores": "Esentai Mall, Stefano Ricci, Подиум Статус",
+      "old": 34,
+      "recent": 0,
+      "total_amount": 44746400,
+      "last_date": "15.07.2025"
+    },
+    {
+      "client": "Иванов Петр",
+      "card_no": "87773585605",
+      "scheme": "Gold (25%)",
+      "stores": "Керуен, Нурсая, Подиум Статус",
+      "old": 70,
+      "recent": 0,
+      "total_amount": 41781900,
+      "last_date": "25.04.2025"
+    },
+    {
+      "client": "Ракишев Сагадат",
+      "card_no": "87007000840",
+      "scheme": "Gold (25%)",
+      "stores": "Canali Астана, Stefano Ricci, Керуен",
+      "old": 33,
+      "recent": 0,
+      "total_amount": 39640500,
+      "last_date": "30.10.2025"
+    },
+    {
+      "client": "Алтынхан Олжас",
+      "card_no": "87715116699",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Esentai Mall, Stefano Ricci, Керуен, Нурсая, Подиум Статус",
+      "old": 39,
+      "recent": 1,
+      "total_amount": 29530700,
+      "last_date": "17.02.2026"
+    },
+    {
+      "client": "Балабиева Карлыгаш",
+      "card_no": "87024000212",
+      "scheme": "Platinum (30%)",
+      "stores": "Esentai Mall, Santoni, Подиум Статус",
+      "old": 12,
+      "recent": 0,
+      "total_amount": 27113400,
+      "last_date": "26.11.2025"
+    },
+    {
+      "client": "Искаков Куаныш",
+      "card_no": "87769998112",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 18,
+      "recent": 0,
+      "total_amount": 23876400,
+      "last_date": "12.07.2025"
+    },
+    {
+      "client": "Джанкабаев Азамат",
+      "card_no": "87780639244",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен",
+      "old": 11,
+      "recent": 0,
+      "total_amount": 19492700,
+      "last_date": "27.11.2025"
+    },
+    {
+      "client": "Жунусов Ернур",
+      "card_no": "87008002222",
+      "scheme": "Platinum (30%)",
+      "stores": "Canali Астана, Esentai Mall, Stefano Ricci, Керуен, Нурсая, Подиум Статус",
+      "old": 28,
+      "recent": 0,
+      "total_amount": 19355400,
+      "last_date": "29.11.2025"
+    },
+    {
+      "client": "Павлингер Роман",
+      "card_no": "87051404081",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Stefano Ricci",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 18516200,
+      "last_date": "19.02.2026"
+    },
+    {
+      "client": "Акылбекова Айнагуль",
+      "card_no": "87008889922",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Stefano Ricci, Нурсая",
+      "old": 15,
+      "recent": 1,
+      "total_amount": 18442800,
+      "last_date": "29.01.2026"
+    },
+    {
+      "client": "Елеуов Галымжан",
+      "card_no": "87011111114",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Керуен, Подиум Статус",
+      "old": 9,
+      "recent": 0,
+      "total_amount": 18103000,
+      "last_date": "16.11.2025"
+    },
+    {
+      "client": "Шильманов Акжол",
+      "card_no": "87472492320",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Нурсая",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 17301800,
+      "last_date": "19.11.2025"
+    },
+    {
+      "client": "Сырбаева Камила",
+      "card_no": "87011112364",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 17294500,
+      "last_date": "28.06.2026"
+    },
+    {
+      "client": "Аленов Бауржан",
+      "card_no": "87757756775",
+      "scheme": "Gold (20%)",
+      "stores": "Нурсая",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 17084000,
+      "last_date": "21.05.2026"
+    },
+    {
+      "client": "Узунян Мкртчян",
+      "card_no": "87015665408",
+      "scheme": "Platinum (30%)",
+      "stores": "Canali Астана, Stefano Ricci, Керуен",
+      "old": 12,
+      "recent": 1,
+      "total_amount": 15895800,
+      "last_date": "03.01.2026"
+    },
+    {
+      "client": "Атышев Нурлан",
+      "card_no": "87020008011",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall",
+      "old": 7,
+      "recent": 0,
+      "total_amount": 15653100,
+      "last_date": "13.09.2025"
+    },
+    {
+      "client": "Алдабергенов Динмухаммед",
+      "card_no": "87761657788",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 15640400,
+      "last_date": "14.10.2025"
+    },
+    {
+      "client": "Жумабеков Ренат",
+      "card_no": "87777771377",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Stefano Ricci",
+      "old": 15,
+      "recent": 0,
+      "total_amount": 15576400,
+      "last_date": "27.12.2025"
+    },
+    {
+      "client": "Abdrakhmanov Anvar",
+      "card_no": "87017227971",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 15536700,
+      "last_date": "14.01.2026"
+    },
+    {
+      "client": "Бурлакова Валерия",
+      "card_no": "87017899998",
+      "scheme": "Platinum (30%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 10,
+      "recent": 1,
+      "total_amount": 15504600,
+      "last_date": "24.06.2026"
+    },
+    {
+      "client": "Рысбай Адилет",
+      "card_no": "87080115555",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен, Подиум Статус",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 15238200,
+      "last_date": "18.05.2026"
+    },
+    {
+      "client": "Баркинхоев Суламбек",
+      "card_no": "87770357777",
+      "scheme": "Platinum (30%)",
+      "stores": "Esentai Mall, Stefano Ricci, Керуен",
+      "old": 13,
+      "recent": 0,
+      "total_amount": 14913300,
+      "last_date": "07.11.2025"
+    },
+    {
+      "client": "Чикаев Хакан",
+      "card_no": "87012522222",
+      "scheme": "Platinum (30%)",
+      "stores": "Подиум Статус",
+      "old": 9,
+      "recent": 1,
+      "total_amount": 14382200,
+      "last_date": "27.04.2026"
+    },
+    {
+      "client": "Аймаганбетова Нурзада",
+      "card_no": "87780606087",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 3,
+      "recent": 0,
+      "total_amount": 14234600,
+      "last_date": "12.11.2025"
+    },
+    {
+      "client": "Tulemaganbetov Diar",
+      "card_no": "87017247777",
+      "scheme": "Gold (20%)",
+      "stores": "Подиум Статус",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 13412800,
+      "last_date": "18.08.2025"
+    },
+    {
+      "client": "Джумабаев Алимбек",
+      "card_no": "87017115321",
+      "scheme": "Platinum (30%)",
+      "stores": "Подиум Статус",
+      "old": 8,
+      "recent": 0,
+      "total_amount": 13332200,
+      "last_date": "22.10.2025"
+    },
+    {
+      "client": "Байгалиев Сакен",
+      "card_no": "87010002000",
+      "scheme": "Platinum (30%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 13,
+      "recent": 1,
+      "total_amount": 13270800,
+      "last_date": "09.01.2026"
+    },
+    {
+      "client": "Гаджиев Гаджи",
+      "card_no": "87775855555",
+      "scheme": "Platinum (30%)",
+      "stores": "Esentai Mall, Керуен, Нурсая, Подиум Статус",
+      "old": 7,
+      "recent": 0,
+      "total_amount": 13186700,
+      "last_date": "01.09.2025"
+    },
+    {
+      "client": "Бердигулов Ернат",
+      "card_no": "87012277377",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Керуен",
+      "old": 13,
+      "recent": 1,
+      "total_amount": 13035400,
+      "last_date": "15.06.2026"
+    },
+    {
+      "client": "Дауенов Булат",
+      "card_no": "87012228884",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Santoni, Подиум Статус",
+      "old": 15,
+      "recent": 0,
+      "total_amount": 12657400,
+      "last_date": "15.12.2025"
+    },
+    {
+      "client": "Молдакасимов Азамат",
+      "card_no": "87015550948",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Mandelli",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 12491000,
+      "last_date": "06.05.2026"
+    },
+    {
+      "client": "Бекенов Нурлан",
+      "card_no": "87011116746",
+      "scheme": "Gold (20%)",
+      "stores": "Нурсая",
+      "old": 8,
+      "recent": 0,
+      "total_amount": 11574800,
+      "last_date": "13.11.2025"
+    },
+    {
+      "client": "Давтян Вануш",
+      "card_no": "87751429235",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Керуен, Нурсая",
+      "old": 13,
+      "recent": 1,
+      "total_amount": 11538200,
+      "last_date": "15.04.2026"
+    },
+    {
+      "client": "Нурахметов Адлет",
+      "card_no": "87005751555",
+      "scheme": "Platinum (30%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 14,
+      "recent": 1,
+      "total_amount": 11181400,
+      "last_date": "21.03.2026"
+    },
+    {
+      "client": "Нышанов Канат",
+      "card_no": "87777370909",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Esentai Mall, Mandelli, Stefano Ricci, Керуен, Нурсая",
+      "old": 14,
+      "recent": 1,
+      "total_amount": 11118700,
+      "last_date": "12.04.2026"
+    },
+    {
+      "client": "Маматраиымов Габит",
+      "card_no": "87017176288",
+      "scheme": "Gold (25%)",
+      "stores": "Подиум Статус",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 11061900,
+      "last_date": "26.11.2025"
+    },
+    {
+      "client": "Жамалов Санжар",
+      "card_no": "87017646666",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Алматы, Esentai Mall, Santoni",
+      "old": 11,
+      "recent": 1,
+      "total_amount": 10956500,
+      "last_date": "27.05.2026"
+    },
+    {
+      "client": "Zainidinov Sabyrzhan",
+      "card_no": "87017772915",
+      "scheme": "Platinum (30%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 7,
+      "recent": 0,
+      "total_amount": 10954100,
+      "last_date": "09.09.2025"
+    },
+    {
+      "client": "Ахметжанова Гульнара",
+      "card_no": "87017771012",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Stefano Ricci, Нурсая",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 10935900,
+      "last_date": "26.04.2026"
+    },
+    {
+      "client": "Ханукаев Эмиддин",
+      "card_no": "87011000430",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 9,
+      "recent": 1,
+      "total_amount": 10713900,
+      "last_date": "13.05.2026"
+    },
+    {
+      "client": "Мичуров Александр",
+      "card_no": "87015990630",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Подиум Статус",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 10710900,
+      "last_date": "18.01.2026"
+    },
+    {
+      "client": "Какимов Дамир",
+      "card_no": "87051006622",
+      "scheme": "Gold (25%)",
+      "stores": "Stefano Ricci, Подиум Статус",
+      "old": 7,
+      "recent": 1,
+      "total_amount": 10705200,
+      "last_date": "11.01.2026"
+    },
+    {
+      "client": "Кабдрахманов Ербол",
+      "card_no": "87017303913",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Esentai Mall, Stefano Ricci",
+      "old": 9,
+      "recent": 1,
+      "total_amount": 10530900,
+      "last_date": "10.06.2026"
+    },
+    {
+      "client": "Bendebayev Madyar",
+      "card_no": "87764077780",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 6,
+      "recent": 0,
+      "total_amount": 10338000,
+      "last_date": "25.12.2025"
+    },
+    {
+      "client": "Сармантаева Раушан",
+      "card_no": "87027772978",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Керуен, Нурсая",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 10263400,
+      "last_date": "18.01.2026"
+    },
+    {
+      "client": "Редясебов Хаким",
+      "card_no": "87084988888",
+      "scheme": "Gold (20%)",
+      "stores": "Подиум Статус",
+      "old": 10,
+      "recent": 0,
+      "total_amount": 10134400,
+      "last_date": "20.12.2025"
+    },
+    {
+      "client": "Murat Aman",
+      "card_no": "87770202777",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 10106500,
+      "last_date": "23.05.2026"
+    },
+    {
+      "client": "Потехин Кажимурат",
+      "card_no": "87017772522",
+      "scheme": "Silver (10%)",
+      "stores": "Esentai Mall, Керуен, Подиум Статус",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 9969000,
+      "last_date": "10.10.2025"
+    },
+    {
+      "client": "Лобода Сергей",
+      "card_no": "87772443424",
+      "scheme": "Gold (25%)",
+      "stores": "Esentai Mall, Mandelli, Подиум Статус",
+      "old": 9,
+      "recent": 0,
+      "total_amount": 9861500,
+      "last_date": "09.11.2025"
+    },
+    {
+      "client": "Сагимбаева Мадина",
+      "card_no": "87012222395",
+      "scheme": "Silver (10%)",
+      "stores": "Керуен",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 9717400,
+      "last_date": "16.12.2025"
+    },
+    {
+      "client": "Жаналинова Шынар",
+      "card_no": "87022105828",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Esentai Mall, Stefano Ricci",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 9392700,
+      "last_date": "07.01.2026"
+    },
+    {
+      "client": "Мирзагалиев Магзум",
+      "card_no": "87017112190",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Нурсая",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 9237300,
+      "last_date": "29.01.2026"
+    },
+    {
+      "client": "Ахметов Шалкар",
+      "card_no": "87761645555",
+      "scheme": "Gold (25%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 9153000,
+      "last_date": "01.11.2025"
+    },
+    {
+      "client": "Улжан Раимбекова",
+      "card_no": "87027921746",
+      "scheme": "Silver (10%)",
+      "stores": "Нурсая",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 9034400,
+      "last_date": "15.01.2026"
+    },
+    {
+      "client": "Котовский Алексей",
+      "card_no": "87776857441",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 9032600,
+      "last_date": "05.05.2025"
+    },
+    {
+      "client": "Ковтуненко Вадим",
+      "card_no": "87716172024",
+      "scheme": "Gold (20%)",
+      "stores": "Подиум Статус",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 9011600,
+      "last_date": "26.11.2025"
+    },
+    {
+      "client": "Жолдыбаев Асылбек",
+      "card_no": "87015225969",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен, Нурсая, Подиум Статус",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 8925300,
+      "last_date": "19.05.2026"
+    },
+    {
+      "client": "Кан Артём",
+      "card_no": "87775555516",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 8890900,
+      "last_date": "04.05.2026"
+    },
+    {
+      "client": "Аманбаев Бауыржан",
+      "card_no": "87014906990",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Керуен",
+      "old": 25,
+      "recent": 0,
+      "total_amount": 8889300,
+      "last_date": "28.09.2025"
+    },
+    {
+      "client": "Килымжанов Елдос",
+      "card_no": "87017995348",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен, Нурсая",
+      "old": 8,
+      "recent": 0,
+      "total_amount": 8833000,
+      "last_date": "06.10.2025"
+    },
+    {
+      "client": "Масгутов Ильмир",
+      "card_no": "87011112060",
+      "scheme": "Silver (10%)",
+      "stores": "Canali Астана, Подиум Статус",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 8635600,
+      "last_date": "11.06.2026"
+    },
+    {
+      "client": "Tuleubekov Adlet",
+      "card_no": "87015880003",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен, Нурсая, Подиум Статус",
+      "old": 12,
+      "recent": 0,
+      "total_amount": 8420300,
+      "last_date": "22.12.2025"
+    },
+    {
+      "client": "Амангалиев Мадияр",
+      "card_no": "87771616161",
+      "scheme": "Silver (10%)",
+      "stores": "Esentai Mall, Stefano Ricci",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 8285300,
+      "last_date": "01.10.2025"
+    },
+    {
+      "client": "Шамиль Шерхан",
+      "card_no": "87009110001",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Mandelli, Подиум Статус",
+      "old": 15,
+      "recent": 1,
+      "total_amount": 8247600,
+      "last_date": "02.02.2026"
+    },
+    {
+      "client": "Бармамбеков Бауржан",
+      "card_no": "87777771905",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Santoni, Подиум Статус",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 8217800,
+      "last_date": "23.03.2026"
+    },
+    {
+      "client": "Абдурахманов Мансур",
+      "card_no": "87017977777",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Mandelli",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 8136200,
+      "last_date": "22.02.2026"
+    },
+    {
+      "client": "Бақдаулет Мадина",
+      "card_no": "87025295595",
+      "scheme": "Silver (10%)",
+      "stores": "Нурсая",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 8069200,
+      "last_date": "01.03.2026"
+    },
+    {
+      "client": "Тасыбаев Манас",
+      "card_no": "87775557770",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Керуен, Нурсая",
+      "old": 7,
+      "recent": 0,
+      "total_amount": 8008400,
+      "last_date": "21.12.2025"
+    },
+    {
+      "client": "Мусабек Нурлан",
+      "card_no": "87071505577",
+      "scheme": "Silver (10%)",
+      "stores": "Canali Астана, Stefano Ricci",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 7959800,
+      "last_date": "08.01.2026"
+    },
+    {
+      "client": "Khanukayeva Alyat",
+      "card_no": "87010291313",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall",
+      "old": 3,
+      "recent": 0,
+      "total_amount": 7717500,
+      "last_date": "31.12.2024"
+    },
+    {
+      "client": "Арынгазин Алибек",
+      "card_no": "87017774820",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен",
+      "old": 12,
+      "recent": 1,
+      "total_amount": 7531400,
+      "last_date": "01.06.2026"
+    },
+    {
+      "client": "Бекбердиев Бауыржан",
+      "card_no": "87751550000",
+      "scheme": "Gold (25%)",
+      "stores": "Подиум Статус",
+      "old": 7,
+      "recent": 1,
+      "total_amount": 7479700,
+      "last_date": "09.03.2026"
+    },
+    {
+      "client": "Еспанов Габит",
+      "card_no": "87010888088",
+      "scheme": "Gold (20%)",
+      "stores": "Подиум Статус",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 7395900,
+      "last_date": "06.04.2026"
+    },
+    {
+      "client": "Баймаганбетов Батырбек",
+      "card_no": "87015557825",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Stefano Ricci, Нурсая",
+      "old": 6,
+      "recent": 0,
+      "total_amount": 7370200,
+      "last_date": "27.07.2025"
+    },
+    {
+      "client": "Мамырбеков Амантай",
+      "card_no": "87023056969",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 7316800,
+      "last_date": "19.09.2025"
+    },
+    {
+      "client": "Семейбаев Сырым",
+      "card_no": "87777777198",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен",
+      "old": 8,
+      "recent": 0,
+      "total_amount": 7196800,
+      "last_date": "06.12.2025"
+    },
+    {
+      "client": "Сомов Дмитрий",
+      "card_no": "87773827700",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Алматы, Esentai Mall",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 7096600,
+      "last_date": "07.02.2026"
+    },
+    {
+      "client": "Ундирбаев Бахдат",
+      "card_no": "87000000090",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Esentai Mall",
+      "old": 7,
+      "recent": 0,
+      "total_amount": 7016200,
+      "last_date": "15.09.2025"
+    },
+    {
+      "client": "Нурбалин Айбек",
+      "card_no": "87777773883",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Нурсая, Подиум Статус",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 6972200,
+      "last_date": "22.05.2026"
+    },
+    {
+      "client": "Шамордин Вячеслав",
+      "card_no": "87017749135",
+      "scheme": "Silver (10%)",
+      "stores": "Керуен",
+      "old": 7,
+      "recent": 0,
+      "total_amount": 6942900,
+      "last_date": "21.12.2025"
+    },
+    {
+      "client": "Симачева Нина",
+      "card_no": "87777077787",
+      "scheme": "Silver (10%)",
+      "stores": "Подиум Статус",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 6898000,
+      "last_date": "24.02.2026"
+    },
+    {
+      "client": "Махмудов Фаррух",
+      "card_no": "87770700707",
+      "scheme": "Gold (25%)",
+      "stores": "Esentai Mall",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 6891300,
+      "last_date": "30.08.2025"
+    },
+    {
+      "client": "Кунанбаев Бейбит",
+      "card_no": "87754716888",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 6813700,
+      "last_date": "22.02.2025"
+    },
+    {
+      "client": "Досанова Камиля",
+      "card_no": "87017200747",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 6609000,
+      "last_date": "21.02.2025"
+    },
+    {
+      "client": "Ержанов Болат",
+      "card_no": "87777772736",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 11,
+      "recent": 1,
+      "total_amount": 6593300,
+      "last_date": "19.03.2026"
+    },
+    {
+      "client": "Маулешева Жамиля",
+      "card_no": "87019996173",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 6589300,
+      "last_date": "29.01.2026"
+    },
+    {
+      "client": "Байболов Ботабек",
+      "card_no": "87055154047",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 3,
+      "recent": 0,
+      "total_amount": 6468200,
+      "last_date": "12.10.2025"
+    },
+    {
+      "client": "Данияр Насипов",
+      "card_no": "87019580095",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Stefano Ricci, Нурсая",
+      "old": 13,
+      "recent": 1,
+      "total_amount": 6437200,
+      "last_date": "17.04.2026"
+    },
+    {
+      "client": "Абимурат Айнур",
+      "card_no": "87015087888",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен, Нурсая",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 6369700,
+      "last_date": "08.03.2026"
+    },
+    {
+      "client": "Цзян Вэй",
+      "card_no": "87785615777",
+      "scheme": "Gold (20%)",
+      "stores": "Подиум Статус",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 6344200,
+      "last_date": "14.10.2025"
+    },
+    {
+      "client": "Балабиев Кайрат",
+      "card_no": "87017774377",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 6260300,
+      "last_date": "18.06.2026"
+    },
+    {
+      "client": "Есенкайыр Аскарбек",
+      "card_no": "87016725616",
+      "scheme": "Gold (20%)",
+      "stores": "Нурсая",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 6176700,
+      "last_date": "09.06.2025"
+    },
+    {
+      "client": "Корж Александр",
+      "card_no": "87788886266",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Mandelli, Santoni, Подиум Статус",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 6162400,
+      "last_date": "04.03.2026"
+    },
+    {
+      "client": "Канапин Жарас",
+      "card_no": "87771401951",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Stefano Ricci",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 6096000,
+      "last_date": "29.05.2025"
+    },
+    {
+      "client": "Герасименко Анатолий",
+      "card_no": "87719173333",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Керуен",
+      "old": 3,
+      "recent": 0,
+      "total_amount": 6088200,
+      "last_date": "17.10.2025"
+    },
+    {
+      "client": "Бейсекин Аян",
+      "card_no": "87072226292",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Esentai Mall, Stefano Ricci",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 5986500,
+      "last_date": "01.04.2026"
+    },
+    {
+      "client": "Ибрагимов Жамал",
+      "card_no": "87017161262",
+      "scheme": "Platinum (30%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 5972400,
+      "last_date": "05.04.2026"
+    },
+    {
+      "client": "JAKIBAYEV MURAT",
+      "card_no": "87772128720",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 5963100,
+      "last_date": "28.01.2026"
+    },
+    {
+      "client": "Кубенов Куат",
+      "card_no": "87753031874",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен, Нурсая",
+      "old": 8,
+      "recent": 1,
+      "total_amount": 5946500,
+      "last_date": "31.05.2026"
+    },
+    {
+      "client": "Шапаупов Жанат",
+      "card_no": "87761518905",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен, Нурсая",
+      "old": 7,
+      "recent": 0,
+      "total_amount": 5939200,
+      "last_date": "16.04.2025"
+    },
+    {
+      "client": "Уразбаев Алмас",
+      "card_no": "87010000214",
+      "scheme": "Gold (20%)",
+      "stores": "Нурсая, Подиум Статус",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 5796300,
+      "last_date": "01.05.2026"
+    },
+    {
+      "client": "Ниязов Рулан",
+      "card_no": "87777740131",
+      "scheme": "Silver (10%)",
+      "stores": "Canali Астана, Stefano Ricci",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 5755300,
+      "last_date": "11.10.2025"
+    },
+    {
+      "client": "Хамметова Айым",
+      "card_no": "87000777700",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Нурсая, Подиум Статус",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 5625000,
+      "last_date": "11.02.2026"
+    },
+    {
+      "client": "Уахитов Ельнар",
+      "card_no": "87018888626",
+      "scheme": "Gold (20%)",
+      "stores": "Нурсая",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 5571000,
+      "last_date": "02.01.2026"
+    },
+    {
+      "client": "Пшембаева Асель",
+      "card_no": "87017772961",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Нурсая",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 5526100,
+      "last_date": "27.02.2026"
+    },
+    {
+      "client": "Абиш Алибек",
+      "card_no": "87007775225",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 5515500,
+      "last_date": "11.07.2025"
+    },
+    {
+      "client": "Кыдыров Ерлан",
+      "card_no": "87011000060",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Алматы, Canali Астана, Stefano Ricci, Керуен, Подиум Статус",
+      "old": 16,
+      "recent": 1,
+      "total_amount": 5427200,
+      "last_date": "18.01.2026"
+    },
+    {
+      "client": "Жандосов Темирлан",
+      "card_no": "87070399901",
+      "scheme": "Gold (20%)",
+      "stores": "Нурсая",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 5355300,
+      "last_date": "03.03.2026"
+    },
+    {
+      "client": "Нургалиева Дина",
+      "card_no": "87052979973",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Нурсая",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 5347500,
+      "last_date": "16.09.2025"
+    },
+    {
+      "client": "Жумабек Биржан",
+      "card_no": "87000232355",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 5340700,
+      "last_date": "26.02.2026"
+    },
+    {
+      "client": "Валеев Жан",
+      "card_no": "87017346984",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 5295800,
+      "last_date": "05.06.2026"
+    },
+    {
+      "client": "Абаева Жанат",
+      "card_no": "87774590208",
+      "scheme": "Gold (20%)",
+      "stores": "Нурсая",
+      "old": 3,
+      "recent": 0,
+      "total_amount": 5283700,
+      "last_date": "24.10.2025"
+    },
+    {
+      "client": "Нусупбекова Баглан",
+      "card_no": "87011112892",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Алматы, Esentai Mall",
+      "old": 11,
+      "recent": 0,
+      "total_amount": 5279400,
+      "last_date": "10.12.2025"
+    },
+    {
+      "client": "Айтбеков Сакен",
+      "card_no": "87017777421",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Нурсая, Подиум Статус",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 5265400,
+      "last_date": "27.07.2025"
+    },
+    {
+      "client": "Ибрагимов Адылжан",
+      "card_no": "87715090909",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 5215000,
+      "last_date": "27.04.2026"
+    },
+    {
+      "client": "Мейрханов Ерик",
+      "card_no": "87015565155",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Stefano Ricci, Керуен",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 5187700,
+      "last_date": "06.02.2026"
+    },
+    {
+      "client": "Vaimer Yelena",
+      "card_no": "87777900097",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 5160000,
+      "last_date": "26.04.2026"
+    },
+    {
+      "client": "Жуман Марат",
+      "card_no": "87025551822",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 5144200,
+      "last_date": "27.06.2025"
+    },
+    {
+      "client": "Балжанбаев Олжас",
+      "card_no": "87015555609",
+      "scheme": "Platinum (30%)",
+      "stores": "Керуен, Подиум Статус",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 5084000,
+      "last_date": "14.03.2026"
+    },
+    {
+      "client": "Мамай Ерлен",
+      "card_no": "87018009818",
+      "scheme": "Silver (10%)",
+      "stores": "Stefano Ricci, Керуен",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 5074700,
+      "last_date": "20.12.2025"
+    },
+    {
+      "client": "Сулейменов Ержан",
+      "card_no": "87017775451",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 4991200,
+      "last_date": "05.05.2026"
+    },
+    {
+      "client": "Нурбаев Ержан",
+      "card_no": "87777773668",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Алматы, Esentai Mall, Керуен",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 4983600,
+      "last_date": "05.06.2026"
+    },
+    {
+      "client": "Байдельдинов Чингис",
+      "card_no": "87014024101",
+      "scheme": "Silver (10%)",
+      "stores": "Canali Астана, Stefano Ricci",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 4949600,
+      "last_date": "07.04.2026"
+    },
+    {
+      "client": "Жантлеуов Бауржан",
+      "card_no": "87018885472",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Stefano Ricci",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 4946200,
+      "last_date": "01.04.2026"
+    },
+    {
+      "client": "Шангириев Муслим",
+      "card_no": "87717777773",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен, Нурсая, Подиум Статус",
+      "old": 9,
+      "recent": 1,
+      "total_amount": 4946100,
+      "last_date": "11.06.2026"
+    },
+    {
+      "client": "Кан Константин",
+      "card_no": "87017269959",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 4908000,
+      "last_date": "09.12.2025"
+    },
+    {
+      "client": "Соскаева Алмагуль",
+      "card_no": "87774447755",
+      "scheme": "Silver (10%)",
+      "stores": "Esentai Mall, Santoni",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 4873500,
+      "last_date": "10.04.2026"
+    },
+    {
+      "client": "Бегалиева Салтанат",
+      "card_no": "87024537071",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен, Нурсая",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 4841300,
+      "last_date": "01.04.2026"
+    },
+    {
+      "client": "Ахметов Адильбек",
+      "card_no": "87770000070",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Stefano Ricci",
+      "old": 6,
+      "recent": 0,
+      "total_amount": 4816400,
+      "last_date": "20.12.2025"
+    },
+    {
+      "client": "Ахмедзянов Станислав",
+      "card_no": "87027982742",
+      "scheme": "Silver (10%)",
+      "stores": "Esentai Mall",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 4803000,
+      "last_date": "15.10.2025"
+    },
+    {
+      "client": "Абдр Нур",
+      "card_no": "87017774831",
+      "scheme": "Silver (10%)",
+      "stores": "Керуен",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 4794200,
+      "last_date": "02.12.2025"
+    },
+    {
+      "client": "Sultanbayeva Zhadra",
+      "card_no": "87777931660",
+      "scheme": "Silver (10%)",
+      "stores": "Керуен",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 4786600,
+      "last_date": "08.01.2026"
+    },
+    {
+      "client": "Бисенкулова Гульжан",
+      "card_no": "87012223434",
+      "scheme": "Gold (25%)",
+      "stores": "Подиум Статус",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 4785000,
+      "last_date": "14.04.2026"
+    },
+    {
+      "client": "Айткулов Ильяс",
+      "card_no": "87082129072",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Керуен, Нурсая",
+      "old": 6,
+      "recent": 0,
+      "total_amount": 4760900,
+      "last_date": "20.05.2025"
+    },
+    {
+      "client": "Донсков Павел",
+      "card_no": "87011117685",
+      "scheme": "Platinum (30%)",
+      "stores": "Подиум Статус",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 4725900,
+      "last_date": "01.03.2025"
+    },
+    {
+      "client": "Тағаев Ғалымжан",
+      "card_no": "87018882404",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Esentai Mall, Stefano Ricci, Нурсая",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 4718900,
+      "last_date": "09.04.2026"
+    },
+    {
+      "client": "Бекен Алишер",
+      "card_no": "87773898888",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Керуен, Нурсая, Подиум Статус",
+      "old": 7,
+      "recent": 0,
+      "total_amount": 4627000,
+      "last_date": "15.10.2025"
+    },
+    {
+      "client": "Улибаев Вахид",
+      "card_no": "87017054421",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен, Нурсая",
+      "old": 12,
+      "recent": 0,
+      "total_amount": 4599600,
+      "last_date": "23.12.2025"
+    },
+    {
+      "client": "Ускимбаева Ляйля",
+      "card_no": "87015663559",
+      "scheme": "Gold (25%)",
+      "stores": "Canali Алматы, Esentai Mall, Mandelli, Подиум Статус",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 4595700,
+      "last_date": "10.01.2026"
+    },
+    {
+      "client": "Ордабеков Бахытжан",
+      "card_no": "87777770990",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен, Подиум Статус",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 4584800,
+      "last_date": "20.02.2026"
+    },
+    {
+      "client": "Зулеев Мухтар",
+      "card_no": "87015551722",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall",
+      "old": 7,
+      "recent": 1,
+      "total_amount": 4566500,
+      "last_date": "13.01.2026"
+    },
+    {
+      "client": "Сеитов Асылбек",
+      "card_no": "87015023333",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 4460700,
+      "last_date": "09.10.2025"
+    },
+    {
+      "client": "Наматуллаев Рустем",
+      "card_no": "87775607025",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Керуен, Нурсая",
+      "old": 12,
+      "recent": 1,
+      "total_amount": 4431800,
+      "last_date": "08.03.2026"
+    },
+    {
+      "client": "Аргиншазин Асет",
+      "card_no": "87012222302",
+      "scheme": "Silver (10%)",
+      "stores": "Canali Астана, Stefano Ricci, Керуен, Нурсая",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 4421500,
+      "last_date": "27.05.2026"
+    },
+    {
+      "client": "Мамеков Айдаулет",
+      "card_no": "87767772007",
+      "scheme": "Silver (10%)",
+      "stores": "Canali Алматы, Esentai Mall",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 4412900,
+      "last_date": "23.12.2025"
+    },
+    {
+      "client": "Кайрат Нуржан",
+      "card_no": "87761111151",
+      "scheme": "Gold (25%)",
+      "stores": "Stefano Ricci",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 4409800,
+      "last_date": "07.05.2025"
+    },
+    {
+      "client": "Мусабеков Базарбай",
+      "card_no": "87477088222",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Керуен, Подиум Статус",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 4385600,
+      "last_date": "14.01.2026"
+    },
+    {
+      "client": "Мусин Дамир",
+      "card_no": "87012333039",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 4383200,
+      "last_date": "30.10.2025"
+    },
+    {
+      "client": "Диханбаев Ержан",
+      "card_no": "87011114178",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Алматы, Esentai Mall, Подиум Статус",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 4364200,
+      "last_date": "10.06.2026"
+    },
+    {
+      "client": "Иксанов Айтжан",
+      "card_no": "87017888862",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Алматы, Canali Астана, Esentai Mall, Santoni, Керуен, Подиум Статус",
+      "old": 9,
+      "recent": 1,
+      "total_amount": 4360700,
+      "last_date": "02.04.2026"
+    },
+    {
+      "client": "Нурсеилов Серик",
+      "card_no": "87015292921",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 4359300,
+      "last_date": "30.06.2026"
+    },
+    {
+      "client": "Жолдаспаев Асхат",
+      "card_no": "87010443311",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 4330300,
+      "last_date": "09.04.2026"
+    },
+    {
+      "client": "Агдавлетов Тимур",
+      "card_no": "87007778614",
+      "scheme": "Gold (20%)",
+      "stores": "Подиум Статус",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 4329000,
+      "last_date": "22.05.2025"
+    },
+    {
+      "client": "Терещенкова Светлана",
+      "card_no": "87022224233",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Santoni",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 4309900,
+      "last_date": "10.05.2026"
+    },
+    {
+      "client": "Нурбалин Даулет",
+      "card_no": "87017370001",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Mandelli, Santoni",
+      "old": 8,
+      "recent": 1,
+      "total_amount": 4290400,
+      "last_date": "10.02.2026"
+    },
+    {
+      "client": "Жапаров Руслан",
+      "card_no": "87021613333",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Алматы, Esentai Mall, Stefano Ricci, Подиум Статус",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 4194700,
+      "last_date": "30.04.2026"
+    },
+    {
+      "client": "Алиева Лаура",
+      "card_no": "87012228562",
+      "scheme": "Gold (20%)",
+      "stores": "Santoni, Керуен, Нурсая",
+      "old": 7,
+      "recent": 1,
+      "total_amount": 4194600,
+      "last_date": "06.01.2026"
+    },
+    {
+      "client": "Мадиев Марат",
+      "card_no": "87015333058",
+      "scheme": "Silver (10%)",
+      "stores": "Canali Астана, Stefano Ricci, Керуен",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 4193500,
+      "last_date": "01.06.2025"
+    },
+    {
+      "client": "Досмухаметов Багдат",
+      "card_no": "87017778372",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 4177700,
+      "last_date": "22.10.2025"
+    },
+    {
+      "client": "Оразалы Дидар",
+      "card_no": "87017477644",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 4167800,
+      "last_date": "24.01.2026"
+    },
+    {
+      "client": "Жамалиев Кайрат",
+      "card_no": "87019998886",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Нурсая",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 4163900,
+      "last_date": "18.01.2026"
+    },
+    {
+      "client": "Болат Санжар",
+      "card_no": "87015551419",
+      "scheme": "Platinum (30%)",
+      "stores": "Canali Алматы, Canali Астана, Esentai Mall, Подиум Статус",
+      "old": 9,
+      "recent": 1,
+      "total_amount": 4155400,
+      "last_date": "25.04.2026"
+    },
+    {
+      "client": "Алтангадас Омирбек",
+      "card_no": "87027888339",
+      "scheme": "Silver (10%)",
+      "stores": "Esentai Mall",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 4132200,
+      "last_date": "21.01.2026"
+    },
+    {
+      "client": "Алешан Ширадзе",
+      "card_no": "87076016300",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 3,
+      "recent": 0,
+      "total_amount": 4103500,
+      "last_date": "28.08.2025"
+    },
+    {
+      "client": "Жумагулов Нуржан",
+      "card_no": "87012227734",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен, Нурсая",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 4079800,
+      "last_date": "02.12.2025"
+    },
+    {
+      "client": "Байрамов Полат",
+      "card_no": "87012835550",
+      "scheme": "Silver (10%)",
+      "stores": "Esentai Mall",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 4078000,
+      "last_date": "01.02.2025"
+    },
+    {
+      "client": "Джобава Леван",
+      "card_no": "87019444090",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен",
+      "old": 5,
+      "recent": 1,
+      "total_amount": 4071900,
+      "last_date": "18.04.2026"
+    },
+    {
+      "client": "Нюдильчинв Артем",
+      "card_no": "87017779846",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Stefano Ricci, Нурсая, Подиум Статус",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 4036600,
+      "last_date": "23.12.2025"
+    },
+    {
+      "client": "Адилов Альдаир",
+      "card_no": "87017873535",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Stefano Ricci, Керуен",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 4031300,
+      "last_date": "29.12.2025"
+    },
+    {
+      "client": "Пшембаева Рабига",
+      "card_no": "87015442147",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Нурсая",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 4024500,
+      "last_date": "30.11.2024"
+    },
+    {
+      "client": "Ахметов Марлен",
+      "card_no": "87011118669",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 6,
+      "recent": 0,
+      "total_amount": 4023200,
+      "last_date": "10.11.2025"
+    },
+    {
+      "client": "Khruchshyov Sergey",
+      "card_no": "87017117876",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 4020700,
+      "last_date": "28.06.2025"
+    },
+    {
+      "client": "Нагиев Эльнур",
+      "card_no": "87087086414",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Mandelli",
+      "old": 8,
+      "recent": 1,
+      "total_amount": 3977800,
+      "last_date": "02.06.2026"
+    },
+    {
+      "client": "Джумабеков Ерканат",
+      "card_no": "87011113232",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен, Подиум Статус",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 3961800,
+      "last_date": "12.02.2026"
+    },
+    {
+      "client": "Жубанышев Анес",
+      "card_no": "87759330763",
+      "scheme": "Silver (10%)",
+      "stores": "Подиум Статус",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 3954900,
+      "last_date": "11.11.2025"
+    },
+    {
+      "client": "Владислав Владислав",
+      "card_no": "87017773790",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен, Нурсая",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 3940100,
+      "last_date": "06.04.2026"
+    },
+    {
+      "client": "Байгенжин Абай",
+      "card_no": "87762110033",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 3915300,
+      "last_date": "28.04.2026"
+    },
+    {
+      "client": "Бахтияров Аркин",
+      "card_no": "87752836063",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 3907500,
+      "last_date": "08.11.2025"
+    },
+    {
+      "client": "Ковальчук Анжелика",
+      "card_no": "87770020939",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Подиум Статус",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 3876400,
+      "last_date": "22.12.2024"
+    },
+    {
+      "client": "Останова Гульжан",
+      "card_no": "87018171991",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci, Керуен, Нурсая",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 3845000,
+      "last_date": "15.05.2026"
+    },
+    {
+      "client": "Нурбол Ерлан",
+      "card_no": "87005550212",
+      "scheme": "Silver (10%)",
+      "stores": "Esentai Mall, Santoni, Stefano Ricci, Керуен",
+      "old": 6,
+      "recent": 0,
+      "total_amount": 3844800,
+      "last_date": "17.12.2025"
+    },
+    {
+      "client": "Садуов Нугман",
+      "card_no": "87017771326",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен, Нурсая",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 3813900,
+      "last_date": "29.05.2026"
+    },
+    {
+      "client": "Джапаров Талгат",
+      "card_no": "87015442872",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен",
+      "old": 7,
+      "recent": 0,
+      "total_amount": 3801400,
+      "last_date": "10.10.2025"
+    },
+    {
+      "client": "Бектибаев Талгат",
+      "card_no": "87775770003",
+      "scheme": "Gold (20%)",
+      "stores": "Подиум Статус",
+      "old": 3,
+      "recent": 1,
+      "total_amount": 3800300,
+      "last_date": "13.03.2026"
+    },
+    {
+      "client": "Абраев Абай",
+      "card_no": "87026221911",
+      "scheme": "Gold (20%)",
+      "stores": "Нурсая",
+      "old": 3,
+      "recent": 0,
+      "total_amount": 3793500,
+      "last_date": "24.10.2025"
+    },
+    {
+      "client": "Демеуов Айдаржан",
+      "card_no": "87015193790",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Алматы, Esentai Mall",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 3785900,
+      "last_date": "02.12.2025"
+    },
+    {
+      "client": "Мусин Муратбек",
+      "card_no": "87019397778",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 3784600,
+      "last_date": "17.06.2026"
+    },
+    {
+      "client": "Акимжанова Жулдыз",
+      "card_no": "87774062448",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен, Подиум Статус",
+      "old": 6,
+      "recent": 1,
+      "total_amount": 3760200,
+      "last_date": "25.02.2026"
+    },
+    {
+      "client": "Нарбеков Алибек",
+      "card_no": "87017779590",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен",
+      "old": 7,
+      "recent": 1,
+      "total_amount": 3734700,
+      "last_date": "20.03.2026"
+    },
+    {
+      "client": "Рустемов Жаслан",
+      "card_no": "87712722224",
+      "scheme": "Gold (20%)",
+      "stores": "Stefano Ricci",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 3723900,
+      "last_date": "20.01.2026"
+    },
+    {
+      "client": "Омаров Амангельды",
+      "card_no": "87771104111",
+      "scheme": "Gold (20%)",
+      "stores": "Нурсая",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 3723600,
+      "last_date": "18.12.2025"
+    },
+    {
+      "client": "Ахметов Бауыржан",
+      "card_no": "87017900000",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Керуен",
+      "old": 5,
+      "recent": 0,
+      "total_amount": 3721700,
+      "last_date": "03.10.2025"
+    },
+    {
+      "client": "Ильясов Григорий",
+      "card_no": "87771485858",
+      "scheme": "Gold (20%)",
+      "stores": "Керуен",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 3720100,
+      "last_date": "21.06.2025"
+    },
+    {
+      "client": "Бекназарова Мереке",
+      "card_no": "87028788900",
+      "scheme": "Silver (10%)",
+      "stores": "Canali Алматы, Esentai Mall",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 3717100,
+      "last_date": "05.05.2026"
+    },
+    {
+      "client": "Абдельманова Асемгуль",
+      "card_no": "87017581419",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен, Подиум Статус",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 3714800,
+      "last_date": "27.07.2025"
+    },
+    {
+      "client": "Иманалиев Баккали",
+      "card_no": "87017885050",
+      "scheme": "Gold (20%)",
+      "stores": "Подиум Статус",
+      "old": 2,
+      "recent": 1,
+      "total_amount": 3699100,
+      "last_date": "24.05.2026"
+    },
+    {
+      "client": "Жалиагамбет Ерлан",
+      "card_no": "87017770047",
+      "scheme": "Gold (20%)",
+      "stores": "Canali Астана, Керуен, Нурсая",
+      "old": 4,
+      "recent": 1,
+      "total_amount": 3677400,
+      "last_date": "21.06.2026"
+    },
+    {
+      "client": "Байкен Есет",
+      "card_no": "87012061986",
+      "scheme": "Gold (20%)",
+      "stores": "Нурсая",
+      "old": 2,
+      "recent": 0,
+      "total_amount": 3667200,
+      "last_date": "27.10.2025"
+    },
+    {
+      "client": "Отаров Сапар",
+      "card_no": "87019083131",
+      "scheme": "Gold (20%)",
+      "stores": "Esentai Mall, Керуен",
+      "old": 4,
+      "recent": 0,
+      "total_amount": 3638000,
+      "last_date": "26.06.2025"
+    }
+  ],
+  "bday_by_month": [
+    {
+      "month_name": "Янв",
+      "total": 385,
+      "bought": 74,
+      "pct": 19.2
+    },
+    {
+      "month_name": "Фев",
+      "total": 333,
+      "bought": 75,
+      "pct": 22.5
+    },
+    {
+      "month_name": "Мар",
+      "total": 325,
+      "bought": 79,
+      "pct": 24.3
+    },
+    {
+      "month_name": "Апр",
+      "total": 323,
+      "bought": 78,
+      "pct": 24.1
+    },
+    {
+      "month_name": "Май",
+      "total": 326,
+      "bought": 80,
+      "pct": 24.5
+    },
+    {
+      "month_name": "Июн",
+      "total": 322,
+      "bought": 85,
+      "pct": 26.4
+    },
+    {
+      "month_name": "Июл",
+      "total": 328,
+      "bought": 42,
+      "pct": 12.8
+    },
+    {
+      "month_name": "Авг",
+      "total": 324,
+      "bought": 36,
+      "pct": 11.1
+    },
+    {
+      "month_name": "Сен",
+      "total": 290,
+      "bought": 45,
+      "pct": 15.5
+    },
+    {
+      "month_name": "Окт",
+      "total": 285,
+      "bought": 66,
+      "pct": 23.2
+    },
+    {
+      "month_name": "Ноя",
+      "total": 311,
+      "bought": 74,
+      "pct": 23.8
+    },
+    {
+      "month_name": "Дек",
+      "total": 270,
+      "bought": 61,
+      "pct": 22.6
+    }
+  ],
+  "total_with_bday": 3791,
+  "bought_near_bday": 795,
+  "bday_pct": 21.0,
+  "bday_clients_count": 795,
+  "journey": [
+    {
+      "from_store": "Подиум Статус",
+      "to_store": "Esentai Mall",
+      "count": 145
+    },
+    {
+      "from_store": "Esentai Mall",
+      "to_store": "Подиум Статус",
+      "count": 131
+    },
+    {
+      "from_store": "Керуен",
+      "to_store": "Нурсая",
+      "count": 117
+    },
+    {
+      "from_store": "Нурсая",
+      "to_store": "Керуен",
+      "count": 92
+    },
+    {
+      "from_store": "Керуен",
+      "to_store": "Canali Астана",
+      "count": 89
+    },
+    {
+      "from_store": "Esentai Mall",
+      "to_store": "Santoni",
+      "count": 78
+    },
+    {
+      "from_store": "Керуен",
+      "to_store": "Stefano Ricci",
+      "count": 77
+    },
+    {
+      "from_store": "Керуен",
+      "to_store": "Esentai Mall",
+      "count": 72
+    },
+    {
+      "from_store": "Нурсая",
+      "to_store": "Stefano Ricci",
+      "count": 68
+    },
+    {
+      "from_store": "Esentai Mall",
+      "to_store": "Керуен",
+      "count": 64
+    },
+    {
+      "from_store": "Esentai Mall",
+      "to_store": "Canali Алматы",
+      "count": 55
+    },
+    {
+      "from_store": "Stefano Ricci",
+      "to_store": "Canali Астана",
+      "count": 54
+    },
+    {
+      "from_store": "Нурсая",
+      "to_store": "Canali Астана",
+      "count": 52
+    },
+    {
+      "from_store": "Керуен",
+      "to_store": "Подиум Статус",
+      "count": 48
+    },
+    {
+      "from_store": "Stefano Ricci",
+      "to_store": "Керуен",
+      "count": 47
+    },
+    {
+      "from_store": "Canali Астана",
+      "to_store": "Керуен",
+      "count": 44
+    },
+    {
+      "from_store": "Подиум Статус",
+      "to_store": "Керуен",
+      "count": 43
+    },
+    {
+      "from_store": "Подиум Статус",
+      "to_store": "Santoni",
+      "count": 43
+    },
+    {
+      "from_store": "Esentai Mall",
+      "to_store": "Mandelli",
+      "count": 42
+    },
+    {
+      "from_store": "Canali Астана",
+      "to_store": "Stefano Ricci",
+      "count": 39
+    }
+  ],
+  "cross_first": [
+    {
+      "first_store": "Нурсая",
+      "cross_clients": 147,
+      "total_clients": 340,
+      "cross_pct": 43.2
+    },
+    {
+      "first_store": "Подиум Статус",
+      "cross_clients": 198,
+      "total_clients": 565,
+      "cross_pct": 35.0
+    },
+    {
+      "first_store": "Canali Астана",
+      "cross_clients": 79,
+      "total_clients": 227,
+      "cross_pct": 34.8
+    },
+    {
+      "first_store": "Stefano Ricci",
+      "cross_clients": 102,
+      "total_clients": 298,
+      "cross_pct": 34.2
+    },
+    {
+      "first_store": "Esentai Mall",
+      "cross_clients": 292,
+      "total_clients": 1036,
+      "cross_pct": 28.2
+    },
+    {
+      "first_store": "Керуен",
+      "cross_clients": 255,
+      "total_clients": 1063,
+      "cross_pct": 24.0
+    },
+    {
+      "first_store": "Canali Алматы",
+      "cross_clients": 10,
+      "total_clients": 64,
+      "cross_pct": 15.6
+    },
+    {
+      "first_store": "Santoni",
+      "cross_clients": 29,
+      "total_clients": 190,
+      "cross_pct": 15.3
+    },
+    {
+      "first_store": "Mandelli",
+      "cross_clients": 3,
+      "total_clients": 26,
+      "cross_pct": 11.5
+    }
+  ],
+  "ltv": [
+    {
+      "Группа": "Только скидки",
+      "Кол-во": 1185,
+      "Ср. выручка": 926617,
+      "Ср. чеков": 1.4,
+      "Медиана": 493200,
+      "Общая выручка": 1098042000
+    },
+    {
+      "Группа": "Скидки + обычные дни",
+      "Кол-во": 1220,
+      "Ср. выручка": 8759851,
+      "Ср. чеков": 8.6,
+      "Медиана": 3521000,
+      "Общая выручка": 10687018400
+    },
+    {
+      "Группа": "Только обычные дни",
+      "Кол-во": 1404,
+      "Ср. выручка": 1097837,
+      "Ср. чеков": 1.5,
+      "Медиана": 579150,
+      "Общая выручка": 1541363600
+    }
+  ],
+  "total_clients": 3809
+};
+
+function fmt(n){return Math.round(n).toLocaleString('ru-RU')}
+function fmtM(n){return (n/1e6).toFixed(1)+' млн'}
+
+function showTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function filterTable(tbodyId, inputId){
+  const q=document.getElementById(inputId).value.toLowerCase();
+  document.querySelectorAll('#'+tbodyId+' tr').forEach(tr=>{
+    tr.style.display=tr.textContent.toLowerCase().includes(q)?'':'none';
+  });
+}
+
+const SEG_COLORS={
+  'Чемпионы':'#534AB7','Лояльные':'#1D9E75','Потенциально лояльные':'#1D9E75',
+  'Новые':'#378ADD','Под угрозой':'#BA7517','Не могу потерять':'#D85A30',
+  'Спящие':'#888780','Потерянные':'#A32D2D','Прочие':'#B4B2A9'
+};
+const SEG_DESC={
+  'Чемпионы':'Покупают часто, недавно и много','Лояльные':'Регулярные покупки',
+  'Потенциально лояльные':'Хорошие траты, но не часто','Новые':'Недавно пришли',
+  'Под угрозой':'Раньше часто — давно нет','Не могу потерять':'Много тратили, исчезают',
+  'Спящие':'Давно нет покупок','Потерянные':'Очень давно, мало чеков','Прочие':'Промежуточные'
+};
+
+// ===== RFM =====
+const rfm = D.rfm_seg;
+const totalClients = rfm.reduce((a,s)=>a+s.count,0);
+const totalRev = rfm.reduce((a,s)=>a+s.total_revenue,0);
+const champions = rfm.find(s=>s.seg==='Чемпионы');
+const lost = rfm.find(s=>s.seg==='Потерянные');
+
+document.getElementById('rfmKpi').innerHTML=`
+  <div class="kpi teal"><div class="kpi-label">Всего клиентов</div><div class="kpi-value">${fmt(D.total_clients)}</div><div class="kpi-sub">в базе</div></div>
+  <div class="kpi purple"><div class="kpi-label">Чемпионы</div><div class="kpi-value">${champions?fmt(champions.count):0}</div><div class="kpi-sub">${champions?fmtM(champions.total_revenue)+' тг':''}</div></div>
+  <div class="kpi red"><div class="kpi-label">Потерянные</div><div class="kpi-value">${lost?fmt(lost.count):0}</div><div class="kpi-sub">требуют реактивации</div></div>
+  <div class="kpi amber"><div class="kpi-label">Под угрозой</div><div class="kpi-value">${fmt(rfm.filter(s=>s.seg==='Под угрозой'||s.seg==='Не могу потерять').reduce((a,s)=>a+s.count,0))}</div><div class="kpi-sub">нужна работа сейчас</div></div>
+`;
+
+new Chart(document.getElementById('rfmChart'),{
+  type:'doughnut',
+  data:{labels:rfm.map(s=>s.seg),datasets:[{data:rfm.map(s=>s.count),backgroundColor:rfm.map(s=>SEG_COLORS[s.seg]),borderWidth:3,borderColor:'#fff'}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12}}}}
+});
+new Chart(document.getElementById('rfmRevChart'),{
+  type:'bar',
+  data:{labels:rfm.map(s=>s.seg),datasets:[{data:rfm.map(s=>s.total_revenue),backgroundColor:rfm.map(s=>SEG_COLORS[s.seg]),borderRadius:4,borderWidth:0}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmtM(c.raw)+' тг'}}},scales:{x:{ticks:{callback:v=>fmtM(v)}},y:{ticks:{font:{size:11}}}}}
+});
+
+const rfmTb=document.getElementById('rfmTable');
+rfm.forEach(s=>{
+  const pct=(s.total_revenue/totalRev*100).toFixed(1);
+  rfmTb.innerHTML+=`<tr>
+    <td><span class="tag" style="background:${SEG_COLORS[s.seg]}22;color:${SEG_COLORS[s.seg]};border:1px solid ${SEG_COLORS[s.seg]}44">${s.seg}</span><br><span style="font-size:11px;color:var(--text-h)">${SEG_DESC[s.seg]||''}</span></td>
+    <td class="num">${fmt(s.count)}</td><td class="num">${s.avg_recency} дн.</td>
+    <td class="num">${s.avg_freq}</td><td class="num">${fmt(s.avg_monetary)} тг</td>
+    <td class="num">${fmtM(s.total_revenue)}</td><td class="num">${pct}%</td>
+  </tr>`;
+});
+
+// ===== TREND =====
+const mon = D.monthly;
+const lastMon = mon[mon.length-2]; // skip july (partial)
+document.getElementById('trendKpi').innerHTML=`
+  <div class="kpi teal"><div class="kpi-label">Всего месяцев данных</div><div class="kpi-value">${mon.length}</div><div class="kpi-sub">окт 2024 – июл 2026</div></div>
+  <div class="kpi"><div class="kpi-label">Пик ср. чека</div><div class="kpi-value">${fmt(Math.max(...mon.map(m=>m.avg_check)))}</div><div class="kpi-sub">тг / чек</div></div>
+  <div class="kpi amber"><div class="kpi-label">Пик выручки (месяц)</div><div class="kpi-value">${fmtM(Math.max(...mon.map(m=>m.revenue)))}</div><div class="kpi-sub">тг</div></div>
+  <div class="kpi purple"><div class="kpi-label">Последний полный месяц</div><div class="kpi-value">${fmt(lastMon?lastMon.avg_check:0)}</div><div class="kpi-sub">тг ср. чек (июнь 2026)</div></div>
+`;
+
+const saleColor=mon.map(m=>m.is_sale?'rgba(186,117,23,0.25)':'rgba(0,0,0,0)');
+const labels=mon.map(m=>m.label);
+new Chart(document.getElementById('trendAvgChart'),{
+  type:'line',
+  data:{labels,datasets:[
+    {label:'Ср. чек',data:mon.map(m=>m.avg_check),borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,.1)',tension:.3,pointRadius:4,borderWidth:2,fill:true}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.raw)+' тг'}}},
+    scales:{x:{ticks:{font:{size:11},maxRotation:35}},y:{ticks:{callback:v=>fmt(v)+'',font:{size:11}}}}}
+});
+new Chart(document.getElementById('trendRevChart'),{
+  type:'bar',
+  data:{labels,datasets:[{label:'Выручка',data:mon.map(m=>m.revenue),backgroundColor:mon.map(m=>m.is_sale?'#BA7517':'#1D9E75'),borderRadius:3,borderWidth:0}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmtM(c.raw)}}},
+    scales:{x:{ticks:{font:{size:11},maxRotation:35}},y:{ticks:{callback:v=>fmtM(v),font:{size:11}}}}}
+});
+new Chart(document.getElementById('trendClientsChart'),{
+  type:'line',
+  data:{labels,datasets:[{label:'Клиентов',data:mon.map(m=>m.clients),borderColor:'#534AB7',backgroundColor:'rgba(83,74,183,.1)',tension:.3,pointRadius:4,borderWidth:2,fill:true}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11},maxRotation:35}},y:{ticks:{font:{size:11}}}}}
+});
+
+const trendTb=document.getElementById('trendTable');
+mon.slice().reverse().forEach((m,i)=>{
+  const bg=m.is_sale?'background:rgba(186,117,23,.08)':'';
+  trendTb.innerHTML+=`<tr style="${bg}">
+    <td><strong>${m.label}</strong>${m.is_sale?' <span class="tag" style="background:var(--amber-l);color:var(--amber);font-size:10px">скидки</span>':''}</td>
+    <td class="num">${fmt(m.n_checks)}</td><td class="num">${fmt(m.clients)}</td>
+    <td class="num">${fmtM(m.revenue)}</td><td class="num">${fmt(m.avg_check)} тг</td>
+    <td class="num">${fmt(Math.round(m.revenue/m.clients))} тг</td>
+  </tr>`;
+});
+
+// ===== DECLINING =====
+const dec=D.declining;
+const decZero=dec.filter(d=>d.recent===0).length;
+const decOne=dec.filter(d=>d.recent===1).length;
+document.getElementById('decCount').textContent=fmt(D.declining_count);
+document.getElementById('decZero').textContent=fmt(decZero);
+document.getElementById('decOne').textContent=fmt(decOne);
+document.getElementById('decPct').textContent=((D.declining_count/D.total_clients)*100).toFixed(1)+'%';
+const decTb=document.getElementById('decBody');
+dec.forEach(d=>{
+  const bg=d.recent===0?'background:var(--red-l)':'';
+  const rc=d.recent===0?'color:var(--red);font-weight:600':'';
+  decTb.innerHTML+=`<tr style="${bg}">
+    <td><strong>${d.client}</strong></td><td>${d.card_no}</td><td>${d.scheme}</td>
+    <td style="font-size:12px">${d.stores}</td>
+    <td class="num" style="text-align:center">${d.old}</td>
+    <td class="num" style="text-align:center;${rc}">${d.recent}</td>
+    <td class="num">${fmt(d.total_amount)} тг</td><td>${d.last_date}</td>
+  </tr>`;
+});
+
+// ===== BIRTHDAY =====
+document.getElementById('bdayTotal').textContent=fmt(D.total_with_bday);
+document.getElementById('bdayBought').textContent=fmt(D.bought_near_bday);
+document.getElementById('bdayPct').textContent=D.bday_pct+'%';
+document.getElementById('bdayMissed').textContent=fmt(D.total_with_bday-D.bought_near_bday);
+
+new Chart(document.getElementById('bdayChart'),{
+  type:'bar',
+  data:{
+    labels:D.bday_by_month.map(m=>m.month_name),
+    datasets:[
+      {label:'Клиентов с ДР',data:D.bday_by_month.map(m=>m.total),backgroundColor:'rgba(136,135,128,.25)',borderRadius:3,borderWidth:0},
+      {label:'Купили у ДР',data:D.bday_by_month.map(m=>m.bought),backgroundColor:'#BA7517',borderRadius:3,borderWidth:0},
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11}}}},
+    scales:{x:{ticks:{font:{size:12}}},y:{ticks:{font:{size:11}}}}}
+});
+
+const bdayTb=document.getElementById('bdayTable');
+const meanPct=D.bday_by_month.reduce((a,m)=>a+m.pct,0)/D.bday_by_month.length;
+D.bday_by_month.forEach(m=>{
+  const hi=m.pct>meanPct;
+  bdayTb.innerHTML+=`<tr style="${hi?'background:var(--amber-l)':''}">
+    <td><strong>${m.month_name}</strong></td>
+    <td class="num">${m.total}</td><td class="num">${m.bought}</td>
+    <td class="num" style="${hi?'font-weight:600;color:var(--amber)':''}">${m.pct}%</td>
+  </tr>`;
+});
+
+// ===== CROSS =====
+const topJourneys=D.journey.slice(0,15);
+new Chart(document.getElementById('crossChart'),{
+  type:'bar',
+  data:{
+    labels:topJourneys.map(j=>j.from_store+' → '+j.to_store),
+    datasets:[{data:topJourneys.map(j=>j.count),backgroundColor:'#1D9E75',borderRadius:4,borderWidth:0}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw+' клиентов'}}},
+    scales:{x:{ticks:{font:{size:11}}},y:{ticks:{font:{size:10}}}}}
+});
+const crossTb=document.getElementById('crossTable');
+D.cross_first.forEach(r=>{
+  const pct=r.cross_pct;
+  const bg=pct>=30?'var(--green-l)':pct>=15?'var(--amber-l)':'';
+  crossTb.innerHTML+=`<tr style="${bg?'background:'+bg:''}">
+    <td><strong>${r.first_store}</strong></td>
+    <td class="num">${r.total_clients}</td><td class="num">${r.cross_clients}</td>
+    <td class="num" style="${pct>=30?'font-weight:600;color:var(--green)':pct>=15?'color:var(--amber)':''}">${pct}%</td>
+  </tr>`;
+});
+const journeyTb=document.getElementById('journeyTable');
+D.journey.forEach((j,i)=>{
+  const bg=i<3?'background:var(--teal-l)':'';
+  journeyTb.innerHTML+=`<tr style="${bg}">
+    <td><strong>${j.from_store}</strong></td><td>${j.to_store}</td>
+    <td class="num" style="${i<3?'font-weight:600;color:var(--teal)':''}">${j.count}</td>
+  </tr>`;
+});
+
+// ===== LTV =====
+const ltv=D.ltv;
+const ltvColors=['#A32D2D','#1D9E75','#378ADD'];
+const ltvLabels=ltv.map(r=>r['Группа']);
+document.getElementById('ltvKpi').innerHTML=ltv.map((r,i)=>`
+  <div class="kpi" style="border-left:3px solid ${ltvColors[i]}">
+    <div class="kpi-label">${r['Группа']}</div>
+    <div class="kpi-value" style="font-size:20px">${fmt(r['Кол-во'])} кл.</div>
+    <div class="kpi-sub">Ср. ${fmt(r['Ср. выручка'])} тг · ${r['Ср. чеков']} чека</div>
+  </div>`).join('')+`<div class="kpi amber"><div class="kpi-label">Кратность LTV</div><div class="kpi-value">${(ltv[1]['Ср. выручка']/ltv[0]['Ср. выручка']).toFixed(1)}×</div><div class="kpi-sub">смешанные vs только скидки</div></div>`;
+
+new Chart(document.getElementById('ltvAvgChart'),{
+  type:'bar',
+  data:{labels:ltvLabels,datasets:[{data:ltv.map(r=>r['Ср. выручка']),backgroundColor:ltvColors,borderRadius:6,borderWidth:0}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.raw)+' тг'}}},
+    scales:{y:{ticks:{callback:v=>fmt(v)+'',font:{size:11}}}}}
+});
+new Chart(document.getElementById('ltvFreqChart'),{
+  type:'bar',
+  data:{labels:ltvLabels,datasets:[{data:ltv.map(r=>r['Ср. чеков']),backgroundColor:ltvColors,borderRadius:6,borderWidth:0}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw+' чека'}}},
+    scales:{y:{ticks:{font:{size:11}}}}}
+});
+const ratio=(ltv[1]['Ср. выручка']/ltv[0]['Ср. выручка']).toFixed(1);
+document.getElementById('ltvConclusion').innerHTML=`
+  <strong>Ключевые выводы:</strong><br><br>
+  • Клиенты «Скидки + обычные дни» тратят в среднем <strong style="color:var(--teal)">${fmt(ltv[1]['Ср. выручка'])} тг</strong> — в <strong>${ratio}×</strong> больше, чем «только скидочные» (${fmt(ltv[0]['Ср. выручка'])} тг).<br>
+  • Задача по группе «Только скидки» (${fmt(ltv[0]['Кол-во'])} чел.): заманить хотя бы раз в межсезонье — персональное предложение, звонок консультанта, эксклюзив.<br>
+  • Клиенты «Только обычные дни» (${fmt(ltv[2]['Кол-во'])} чел.) — стабильная база, не реагирующая на скидки. Ценны, но с ними не нужно «жертвовать» маржой акциями.`;
+</script>
+</body>
+</html>
